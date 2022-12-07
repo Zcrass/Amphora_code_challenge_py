@@ -2,7 +2,7 @@ import os
 import sys
 import pandas as pd
 from functions import *
-# pd.options.mode.chained_assignment = None  # default='warn'
+pd.options.mode.chained_assignment = None  # default='warn'
 
 if __name__ == "__main__":
 
