@@ -18,24 +18,37 @@ def get_vcf_names(vcf_path):
     with open(vcf_path, 'rb') as test_f:
         gziped = test_f.read(2) == b'\x1f\x8b'
     if gziped == True:
-        with gzip.open(vcf_path, "rt") as ifile:
-            for line in ifile:
-                if line.startswith("#CHROM"):
-                    vcf_names = [x for x in line.split('\t')]
-                    vcf_names[0] = vcf_names[0].replace("#", "")
-                    vcf_names[-1] = vcf_names[-1].rstrip()
-                    break
-        ifile.close()
+        opening_fun = gzip.open(vcf_path, "rt")
     else:
-        with open(vcf_path, "rt") as ifile:
-            for line in ifile:
-                if line.startswith("#CHROM"):
-                    vcf_names = [x for x in line.split('\t')]
-                    vcf_names[0] = vcf_names[0].replace("#", "")
-                    vcf_names[-1] = vcf_names[-1].rstrip()
-                    break
-        ifile.close()
+        opening_fun = open(vcf_path, "rt")
+    with opening_fun as ifile:
+        for line in ifile:
+            if line.startswith("#CHROM"):
+                vcf_names = [x for x in line.split('\t')]
+                vcf_names[0] = vcf_names[0].replace("#", "")
+                vcf_names[-1] = vcf_names[-1].rstrip()
+                break
+    ifile.close()
     return vcf_names
+
+    #     # with gzip.open(vcf_path, "rt") as ifile:
+    #         for line in ifile:
+    #             if line.startswith("#CHROM"):
+    #                 vcf_names = [x for x in line.split('\t')]
+    #                 vcf_names[0] = vcf_names[0].replace("#", "")
+    #                 vcf_names[-1] = vcf_names[-1].rstrip()
+    #                 break
+    #     ifile.close()
+    # else:
+    #     # with open(vcf_path, "rt") as ifile:
+    #         for line in ifile:
+    #             if line.startswith("#CHROM"):
+    #                 vcf_names = [x for x in line.split('\t')]
+    #                 vcf_names[0] = vcf_names[0].replace("#", "")
+    #                 vcf_names[-1] = vcf_names[-1].rstrip()
+    #                 break
+    #     ifile.close()
+    # return vcf_names
 
 def import_geno(file, format):
     """ 

@@ -1,4 +1,8 @@
 Challenge_02_clustering_v1.py
+Challenge_03_classification.py
 coordination.txt
 geno_table.csv
 Challenge_Samples/
+samples/
+test.py
+__pycache__/
