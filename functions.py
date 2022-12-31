@@ -31,25 +31,6 @@ def get_vcf_names(vcf_path):
     ifile.close()
     return vcf_names
 
-    #     # with gzip.open(vcf_path, "rt") as ifile:
-    #         for line in ifile:
-    #             if line.startswith("#CHROM"):
-    #                 vcf_names = [x for x in line.split('\t')]
-    #                 vcf_names[0] = vcf_names[0].replace("#", "")
-    #                 vcf_names[-1] = vcf_names[-1].rstrip()
-    #                 break
-    #     ifile.close()
-    # else:
-    #     # with open(vcf_path, "rt") as ifile:
-    #         for line in ifile:
-    #             if line.startswith("#CHROM"):
-    #                 vcf_names = [x for x in line.split('\t')]
-    #                 vcf_names[0] = vcf_names[0].replace("#", "")
-    #                 vcf_names[-1] = vcf_names[-1].rstrip()
-    #                 break
-    #     ifile.close()
-    # return vcf_names
-
 def import_geno(file, format):
     """ 
     This function reads a CSV or VCF file from one individual sample
@@ -75,15 +56,22 @@ def import_geno(file, format):
     if format == "vcf":
         names = get_vcf_names(file)
         with open(file, 'rb') as test_f:
-            gziped = test_f.read(2) == b'\x1f\x8b'
-        if gziped == True:
-            vcf_df = pd.read_csv(file, comment='#', compression='gzip',
-                                 delim_whitespace=True, header=None,
-                                 names=names)
-        else:
-            vcf_df = pd.read_csv(file, comment='#', compression=None,
-                                 delim_whitespace=True, header=None,
-                                 names=names)
+            if test_f.read(2) == b'\x1f\x8b':
+                compression = 'gzip'
+            else: 
+                compression = None
+            # gziped = test_f.read(2) == b'\x1f\x8b'
+        # if gziped == True:
+        #     vcf_df = pd.read_csv(file, comment='#', compression='gzip',
+        #                          delim_whitespace=True, header=None,
+        #                          names=names)
+        # else:
+        #     vcf_df = pd.read_csv(file, comment='#', compression=None,
+        #                          delim_whitespace=True, header=None,
+        #                          names=names)
+        vcf_df = pd.read_csv(file, comment='#', compression=compression,
+                             delim_whitespace=True, header=None,
+                             names=names)
         geno = vcf_df[["CHROM", "POS", "REF", "ALT", ind]]
     elif format == "csv":
         ind = os.path.basename(file).split('.', 1)[0]
