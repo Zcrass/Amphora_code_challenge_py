@@ -4,7 +4,7 @@ import logging as lg
 import os
 import pandas as pd
 import sys
-from functions import get_vcf_names, import_geno, geno2num
+from functions import import_geno, geno2num
 
 
 if __name__ == '__main__':
@@ -15,7 +15,6 @@ if __name__ == '__main__':
     stdout_handler = lg.StreamHandler(sys.stdout)
     stdout_handler.setLevel(lg.INFO)
     logger.addHandler(stdout_handler)
-    
     
     parser = argparse.ArgumentParser(prog = 'Challenge_01',
                                      description = 'Program to perform the first task in the Amphora Code Challenge')
