@@ -68,63 +68,25 @@ if __name__ == '__main__':
         #############################################
         ### saving
         if args.out_file == None:
-            logger.warning(f'WARNING: Output file not specified. Results were not saved')
+            logger.warning(f'WARNING: Output file not specified. Results were not saved.')
         else:
             coord_df.to_csv(args.out_file)
             logger.info(f'clustering results saved in file {args.out_file}')
             
-        
         #############################################
         ### ploting
         logger.info(f'Ploting...')
-        cols = ['gray',  '#440154FF', '#3B528BFF', '#21908CFF', '#5DC863FF', '#FDE725FF']
+        cols = ['#440154FF', '#3B528BFF', '#21908CFF', '#5DC863FF', '#FDE725FF', 'gray']
 
         fig = plt.figure(1, figsize=(12, 9))
-        ### pca plot
-        sub_pca = fig.add_subplot(1, 3, 1)
-        sub_pca.title.set_text('PCA vals')
-        sub_pca.scatter(pca_val[coord_df['Superpopulation code'] == 'Unknown', 0], 
-                        pca_val[coord_df['Superpopulation code'] == 'Unknown', 1], color=cols[0], edgecolor=None, alpha=0.5, s=15)
-        sub_pca.scatter(pca_val[coord_df['Superpopulation code'] == 'AFR', 0], 
-                        pca_val[coord_df['Superpopulation code'] == 'AFR', 1], color=cols[1], edgecolor=None, alpha=0.5, s=15)
-        sub_pca.scatter(pca_val[coord_df['Superpopulation code'] == 'AMR', 0], 
-                        pca_val[coord_df['Superpopulation code'] == 'AMR', 1], color=cols[2], edgecolor=None, alpha=0.5, s=15)
-        sub_pca.scatter(pca_val[coord_df['Superpopulation code'] == 'EAS', 0], 
-                        pca_val[coord_df['Superpopulation code'] == 'EAS', 1], color=cols[3], edgecolor=None, alpha=0.5, s=15)
-        sub_pca.scatter(pca_val[coord_df['Superpopulation code'] == 'EUR', 0], 
-                        pca_val[coord_df['Superpopulation code'] == 'EUR', 1], color=cols[4], edgecolor=None, alpha=0.5, s=15)
-        sub_pca.scatter(pca_val[coord_df['Superpopulation code'] == 'SAS', 0], 
-                        pca_val[coord_df['Superpopulation code'] == 'SAS', 1], color=cols[5], edgecolor=None, alpha=0.5, s=15)
-        sub_pca.legend(coord_df['Superpopulation code'])
-
-        ### hierarchical plot
-        sub_hier = fig.add_subplot(1, 3, 2)
-        sub_hier.title.set_text('Hierarchical clustering')
-        sub_hier.scatter(pca_val[coord_df['hierarchical'] == 0, 0],
-                        pca_val[coord_df['hierarchical'] == 0, 1], color=cols[2], edgecolor=None, alpha=0.5, s=15)
-        sub_hier.scatter(pca_val[coord_df['hierarchical'] == 1, 0],
-                        pca_val[coord_df['hierarchical'] == 1, 1], color=cols[1], edgecolor=None, alpha=0.5, s=15)
-        sub_hier.scatter(pca_val[coord_df['hierarchical'] == 2, 0],
-                        pca_val[coord_df['hierarchical'] == 2, 1], color=cols[3], edgecolor=None, alpha=0.5, s=15)
-        sub_hier.scatter(pca_val[coord_df['hierarchical'] == 3, 0],
-                        pca_val[coord_df['hierarchical'] == 3, 1], color=cols[5], edgecolor=None, alpha=0.5, s=15)
-        sub_hier.scatter(pca_val[coord_df['hierarchical'] == 4, 0],
-                        pca_val[coord_df['hierarchical'] == 4, 1], color=cols[4], edgecolor=None, alpha=0.5, s=15)
-        # sub_hier.legend(coord_df['Superpopulation code'])
-
-        ### kmeans plot
-        sub_kms = fig.add_subplot(1, 3, 3)
-        sub_kms.title.set_text('KMeans clustering')
-        sub_kms.scatter(pca_val[coord_df['kmeans'] == 0, 0],
-                        pca_val[coord_df['kmeans'] == 0, 1], color=cols[3], edgecolor=None, alpha=0.5, s=15)
-        sub_kms.scatter(pca_val[coord_df['kmeans'] == 1, 0],
-                        pca_val[coord_df['kmeans'] == 1, 1], color=cols[4], edgecolor=None, alpha=0.5, s=15)
-        sub_kms.scatter(pca_val[coord_df['kmeans'] == 2, 0],
-                        pca_val[coord_df['kmeans'] == 2, 1], color=cols[2], edgecolor=None, alpha=0.5, s=15)
-        sub_kms.scatter(pca_val[coord_df['kmeans'] == 3, 0],
-                        pca_val[coord_df['kmeans'] == 3, 1], color=cols[1], edgecolor=None, alpha=0.5, s=15)
-        sub_kms.scatter(pca_val[coord_df['kmeans'] == 4, 0],
-                        pca_val[coord_df['kmeans'] == 4, 1], color=cols[5], edgecolor=None, alpha=0.5, s=15)
-        # sub_kms.legend(coord_df['Superpopulation code'])
-                        
+        
+        for n, colname in enumerate(coord_df.drop('numeric_classes', axis=1).columns.tolist()):
+                sub = plt.subplot(1, 3, n + 1)
+                sub.title.set_text(colname)
+                for i, j in enumerate(coord_df[colname].unique()):
+                    x = pca_val[coord_df[colname] == j, 0]
+                    y = pca_val[coord_df[colname] == j, 1]
+                    sub.scatter(x, y, color=cols[i], edgecolor=None, alpha=0.5, s=15)
+                sub.legend(coord_df[colname])
+                                        
         plt.show()
