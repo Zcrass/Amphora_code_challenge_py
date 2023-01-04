@@ -16,8 +16,7 @@ if __name__ == '__main__':
     stdout_handler.setLevel(lg.INFO)
     logger.addHandler(stdout_handler)
     
-    parser = argparse.ArgumentParser(prog = 'Challenge_01',
-                                     description = 'Program to perform the first task in the Amphora Code Challenge')
+    parser = argparse.ArgumentParser(prog = 'Challenge_01', description = 'Program to perform the first task in the Amphora Code Challenge')
     parser.add_argument('-s', '--samples_path')
     parser.add_argument('-o', '--out_file')
     args = parser.parse_args()
